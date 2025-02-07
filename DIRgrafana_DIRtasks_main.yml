@@ -1,0 +1,34 @@
+---
+# tasks file for grafana
+- name: Add grafana repo
+  ansible.builtin.copy:
+    src: grafana_repo
+    dest: /etc/yum.repos.d/grafana.repo
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Install grafana
+  ansible.builtin.package:
+    name: grafana
+    state: present
+  become: true
+
+- name: Ensure grafana is enabled and running
+  ansible.builtin.service:
+    name: grafana-server
+    enabled: true
+    state: started
+
+- name: Ensure grafana directory is present
+  ansible.builtin.file:
+    path: "/etc/grafana/"
+    state: directory
+
+
+# "dark", "light" or "system"
+- name: Add grafana config
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+  notify: restart_grafana
