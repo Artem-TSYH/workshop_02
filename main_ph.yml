@@ -1,0 +1,7 @@
+---
+- name: Install and configure grafana
+  hosts: grafana
+  vars:
+    theme: "dark"
+  roles:
+    - grafana
