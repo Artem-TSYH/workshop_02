@@ -1,0 +1,26 @@
+---
+- name: Install Grafana
+  hosts: grafana
+  become: yes
+  tasks:
+    - name: Copy Grafana repo file
+      copy:
+        src: ./grafana.repo
+        dest: /etc/yum.repos.d/grafana.repo
+
+    - name: Install Grafana package
+      dnf:
+        name: grafana
+        state: present
+
+    - name: Start and enable Grafana service
+      systemd:
+        name: grafana-server
+        state: started
+        enabled: yes
+
+    - name: Stop HTTPD
+      service:
+        name: httpd
+        state: stopped
+
